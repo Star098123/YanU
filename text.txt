@@ -1,0 +1,147 @@
+   from com.YADX.WZQ.entity.Game import Game
+
+
+class Script:
+    def __init__(self):
+        self.game=Game()
+        self.color=1
+
+    def start(self):
+        content={"color":3}
+        while not self.__isSuccess(content):
+            self.__printGame()
+            content=self.__check()
+        self.__printGame()
+        print("恭喜获胜")
+
+        pass
+    #当前方法是为了判断落子以后是否胜利的方法
+    def __isSuccess(self,content):
+        if content["color"]>2:
+            return False
+        else:
+            return self.__verifyCZ(content)or self.__verifyYX(content) or self.__verifySP(content) or self.__verifyZX(content)
+
+
+    #落子方法
+    def __check(self):
+        print("请输入要落子的行：")
+        row = int(input())
+        print("请输入要落子的列：")
+        col = int(input())
+        if self.game.view[row][col]>0:  #判断当前位置是否有棋子了
+            print("当前位置上有内容")
+            result = {"row": row, "col": col, "color":3}#准备返回一个数据字典，其中color为3，表示本次操作无效。
+            return result
+        self.game.view[row][col]=self.color  #设置棋盘中对应棋子的颜色
+        result={"row":row,"col":col,"color":self.color}
+        if self.color==1:
+            self.color=2
+        else :
+            self.color=1
+            pass
+        return result
+#打印棋盘方法
+    def __printGame(self):
+        for i in self.game.view:
+            for j in i:
+                print(j,end="  ")
+                pass
+            print()
+
+    def __verifyCZ(self,content):
+        row=content["row"]
+        col=content["col"]
+        color=content["color"]
+        count=0
+        while self.game.view[row][col]==color:
+            count=count+1
+            if row==0:
+                break
+            else:
+                row=row-1
+                pass
+
+        row=content["row"]
+        while self.game.view[row][col]==color:
+            count=count+1
+            if row==14:
+                break
+            else:
+                row=row+1
+                pass
+        return count>=6
+
+    def __verifyYX(self,content):
+        row = content["row"]
+        col = content["col"]
+        color = content["color"]
+        count = 0
+        while self.game.view[row][col]==color:
+            count=count+1
+            if row ==0:
+                break
+            if col ==14:
+                break
+            row=row-1
+            col=col+1
+
+        row=content["row"]
+        col=content["col"]
+        while self.game.view[row][col]==color:
+            count=count+1
+            if row==14:
+                break
+            if col==0:
+                break
+            row=row+1
+            col=col-1
+        return count >= 6
+
+    def __verifySP(self,content):
+        row = content["row"]
+        col = content["col"]
+        color = content["color"]
+        count = 0
+        while self.game.view[row][col] == color:
+            count = count + 1
+            if col==0:
+                break
+            else:
+                col=col-1
+                pass
+        col = content["col"]
+        while self.game.view[row][col] == color:
+            count = count + 1
+            if col == 14:
+                break
+            else:
+                col = col + 1
+                pass
+        return count >= 6
+
+    def __verifyZX(self,content):
+        row = content["row"]
+        col = content["col"]
+        color = content["color"]
+        count = 0
+        while self.game.view[row][col] == color:
+            count = count + 1
+            if row == 0:
+                break
+            if col == 14:
+                break
+            row = row + 1
+            col = col + 1
+        row = content["row"]
+        col = content["col"]
+        while self.game.view[row][col] == color:
+            count = count + 1
+            if row == 14:
+                break
+            if col == 0:
+                break
+            row = row - 1
+            col = col - 1
+        return count >= 6
+
